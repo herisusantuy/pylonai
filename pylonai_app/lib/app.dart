@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pylonai_app/authentication/authentication.dart';
 import 'package:pylonai_app/home/home.dart';
 import 'package:pylonai_app/login/login.dart';
+import 'package:pylonai_app/sign-up/sign_up.dart';
 import 'package:pylonai_app/splash/splash.dart';
 import 'package:user_repository/user_repository.dart';
 
