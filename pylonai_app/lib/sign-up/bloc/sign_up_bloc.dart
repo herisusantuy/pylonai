@@ -66,12 +66,16 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
     if (state.isValid) {
       emit(state.copyWith(status: FormzSubmissionStatus.inProgress));
       try {
-        await _authenticationRepository.signUp(
+        var response = await _authenticationRepository.signUp(
           username: state.username.value,
           email: state.email.value,
           password: state.password.value,
         );
-        emit(state.copyWith(status: FormzSubmissionStatus.success));
+        if (response.statusCode == 201) {
+          emit(state.copyWith(status: FormzSubmissionStatus.success));
+        } else {
+          emit(state.copyWith(status: FormzSubmissionStatus.failure));
+        }
       } catch (_) {
         emit(state.copyWith(status: FormzSubmissionStatus.failure));
       }

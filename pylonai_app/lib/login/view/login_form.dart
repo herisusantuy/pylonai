@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pylonai_app/login/login.dart';
 import 'package:formz/formz.dart';
+import 'package:pylonai_app/sign-up/view/sign_up_page.dart';
 
 class LoginForm extends StatelessWidget {
   const LoginForm({super.key});
@@ -28,6 +30,12 @@ class LoginForm extends StatelessWidget {
             _PasswordInput(),
             const Padding(padding: EdgeInsets.all(12)),
             _LoginButton(),
+            GestureDetector(
+              child: InkWell(
+                onTap: () => SignUpPage.open(context),
+                child: const Text("Sign Up"),
+              ),
+            )
           ],
         ),
       ),

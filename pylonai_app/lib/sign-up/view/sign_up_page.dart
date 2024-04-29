@@ -27,4 +27,10 @@ class SignUpPage extends StatelessWidget {
       ),
     );
   }
+
+  static void open(BuildContext context) => Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => const SignUpPage(),
+        ),
+      );
 }

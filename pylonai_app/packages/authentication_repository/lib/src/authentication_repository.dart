@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'package:dio/dio.dart';
-import 'dart:convert';
-
 import 'package:pylonai_app/login/domain/login_response.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
 
 final dio = Dio();
 
@@ -21,32 +21,48 @@ class AuthenticationRepository {
     required String email,
     required String password,
   }) async {
-    await Future.delayed(
-      const Duration(milliseconds: 300),
-      () => _controller.add(AuthenticationStatus.authenticated),
+    final prefs = await SharedPreferences.getInstance();
+    Map<String, dynamic> body = {
+      'email': email,
+      'password': password,
+    };
+    var response = await dio.post(
+      'https://api.escuelajs.co/api/v1/auth/login',
+      data: jsonEncode(body),
+      options: Options(
+        headers: {'Content-Type': 'application/json'},
+      ),
     );
+    if (response.statusCode == 201) {
+      var data = LoginResponse.fromJson(response.data);
+      await prefs.setString('accessToken', data.accessToken);
+      await prefs.setString('refreshToken', data.refreshToken);
+
+      _controller.add(AuthenticationStatus.authenticated);
+    } else {
+      _controller.add(AuthenticationStatus.unauthenticated);
+    }
   }
 
-  Future<void> signUp({
+  Future<Response> signUp({
     required String username,
     required String email,
     required String password,
   }) async {
-    var name = username;
     var avatar = 'https://picsum.photos/800';
-    print(username);
-    print(email);
-    print(password);
+    Map<String, dynamic> body = {
+      'name': username,
+      'email': email,
+      'password': password,
+      'avatar': avatar
+    };
+
     var response = await dio.post('https://api.escuelajs.co/api/v1/users/',
-        data: {name: name, email: email, password: password, avatar: avatar},
+        data: jsonEncode(body),
         options: Options(
           headers: {'content-Type': 'application/json'},
         ));
-    print(response.data);
-    // await Future.delayed(
-    //   const Duration(milliseconds: 300),
-    //   () => _controller.add(AuthenticationStatus.authenticated),
-    // );
+    return response;
   }
 
   void logOut() {
