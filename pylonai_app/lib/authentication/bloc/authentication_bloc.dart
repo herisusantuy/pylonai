@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:user_repository/src/domain/user_response.dart';
 import 'package:user_repository/user_repository.dart';
 
 part 'authentication_event.dart';
@@ -42,10 +43,10 @@ class AuthenticationBloc
       case AuthenticationStatus.unauthenticated:
         return emit(const AuthenticationState.unauthenticated());
       case AuthenticationStatus.authenticated:
-        final user = await _tryGetUser();
+        final users = await _tryGetUsers();
         return emit(
-          user != null
-              ? AuthenticationState.authenticated(user)
+          users != null
+              ? AuthenticationState.authenticated(users)
               : const AuthenticationState.unauthenticated(),
         );
       case AuthenticationStatus.unknown:
@@ -60,10 +61,19 @@ class AuthenticationBloc
     _authenticationRepository.logOut();
   }
 
-  Future<User?> _tryGetUser() async {
+  Future<UserResponse?> _tryGetUser() async {
     try {
       final user = await _userRepository.getUser();
       return user;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  Future<List<UserResponse>?> _tryGetUsers() async {
+    try {
+      final users = await _userRepository.getUsers();
+      return users;
     } catch (_) {
       return null;
     }

@@ -11,28 +11,46 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            Builder(
-              builder: (context) {
-                final userId = context.select(
-                  (AuthenticationBloc bloc) => bloc.state.user.id,
-                );
-                return Text('UserID: $userId');
-              },
-            ),
-            ElevatedButton(
-              child: const Text('Logout'),
-              onPressed: () {
-                context
-                    .read<AuthenticationBloc>()
-                    .add(AuthenticationLogoutRequested());
-              },
-            ),
-          ],
+    return SafeArea(
+      child: Scaffold(
+        body: Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            children: <Widget>[
+              const Text('List of Employee'),
+              Builder(
+                builder: (context) {
+                  final users = context.select(
+                    (AuthenticationBloc bloc) => bloc.state.users,
+                  );
+                  return users!.isNotEmpty
+                      ? Expanded(
+                          child: ListView.separated(
+                            itemCount: users.length,
+                            separatorBuilder:
+                                (BuildContext context, int index) =>
+                                    const Divider(),
+                            itemBuilder: (context, index) {
+                              final user = users[index];
+                              return ListTile(
+                                title: Text('${index + 1}. ${user.name}'),
+                              );
+                            },
+                          ),
+                        )
+                      : const Text("No Users");
+                },
+              ),
+              ElevatedButton(
+                child: const Text('Download CSV'),
+                onPressed: () {
+                  context
+                      .read<AuthenticationBloc>()
+                      .add(AuthenticationLogoutRequested());
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );

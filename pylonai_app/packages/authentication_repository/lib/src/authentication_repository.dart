@@ -1,4 +1,10 @@
 import 'dart:async';
+import 'package:dio/dio.dart';
+import 'dart:convert';
+
+import 'package:pylonai_app/login/domain/login_response.dart';
+
+final dio = Dio();
 
 enum AuthenticationStatus { unknown, authenticated, unauthenticated }
 
@@ -12,7 +18,7 @@ class AuthenticationRepository {
   }
 
   Future<void> logIn({
-    required String username,
+    required String email,
     required String password,
   }) async {
     await Future.delayed(
@@ -26,10 +32,21 @@ class AuthenticationRepository {
     required String email,
     required String password,
   }) async {
-    await Future.delayed(
-      const Duration(milliseconds: 300),
-      () => _controller.add(AuthenticationStatus.authenticated),
-    );
+    var name = username;
+    var avatar = 'https://picsum.photos/800';
+    print(username);
+    print(email);
+    print(password);
+    var response = await dio.post('https://api.escuelajs.co/api/v1/users/',
+        data: {name: name, email: email, password: password, avatar: avatar},
+        options: Options(
+          headers: {'content-Type': 'application/json'},
+        ));
+    print(response.data);
+    // await Future.delayed(
+    //   const Duration(milliseconds: 300),
+    //   () => _controller.add(AuthenticationStatus.authenticated),
+    // );
   }
 
   void logOut() {

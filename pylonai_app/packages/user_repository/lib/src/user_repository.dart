@@ -1,16 +1,21 @@
 import 'dart:async';
+import 'package:dio/dio.dart';
 
 import 'package:user_repository/src/models/models.dart';
-import 'package:uuid/uuid.dart';
+
+import 'domain/user_response.dart';
+
+final dio = Dio();
 
 class UserRepository {
-  User? _user;
+  Future<UserResponse?> getUser() async {
+    var response = await dio.get('https://api.escuelajs.co/api/v1/users/2');
+    return UserResponse.fromJson(response.data);
+  }
 
-  Future<User?> getUser() async {
-    if (_user != null) return _user;
-    return Future.delayed(
-      const Duration(milliseconds: 300),
-      () => _user = User(const Uuid().v4()),
-    );
+  Future<List<UserResponse>> getUsers() async {
+    var response = await dio.get('https://api.escuelajs.co/api/v1/users');
+    final users = response.data as List;
+    return users.map((e) => UserResponse.fromJson(e)).toList();
   }
 }
