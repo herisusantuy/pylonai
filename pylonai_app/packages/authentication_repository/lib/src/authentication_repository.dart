@@ -45,13 +45,13 @@ class AuthenticationRepository {
   }
 
   Future<Response> signUp({
-    required String username,
+    required String name,
     required String email,
     required String password,
   }) async {
     var avatar = 'https://picsum.photos/800';
     Map<String, dynamic> body = {
-      'name': username,
+      'name': name,
       'email': email,
       'password': password,
       'avatar': avatar

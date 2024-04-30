@@ -25,17 +25,12 @@ class LoginForm extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            _UsernameInput(),
+            _EmailInput(),
             const Padding(padding: EdgeInsets.all(12)),
             _PasswordInput(),
             const Padding(padding: EdgeInsets.all(12)),
             _LoginButton(),
-            GestureDetector(
-              child: InkWell(
-                onTap: () => SignUpPage.open(context),
-                child: const Text("Sign Up"),
-              ),
-            )
+            _CreateAccount()
           ],
         ),
       ),
@@ -43,20 +38,20 @@ class LoginForm extends StatelessWidget {
   }
 }
 
-class _UsernameInput extends StatelessWidget {
+class _EmailInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<LoginBloc, LoginState>(
-      buildWhen: (previous, current) => previous.username != current.username,
+      buildWhen: (previous, current) => previous.email != current.email,
       builder: (context, state) {
         return TextField(
-          key: const Key('loginForm_usernameInput_textField'),
-          onChanged: (username) =>
-              context.read<LoginBloc>().add(LoginUsernameChanged(username)),
+          key: const Key('loginForm_emailInput_textField'),
+          onChanged: (email) =>
+              context.read<LoginBloc>().add(LoginEmailChanged(email)),
           decoration: InputDecoration(
-            labelText: 'username',
+            labelText: 'email',
             errorText:
-                state.username.displayError != null ? 'invalid username' : null,
+                state.email.displayError != null ? 'invalid email' : null,
           ),
         );
       },
@@ -94,6 +89,10 @@ class _LoginButton extends StatelessWidget {
         return state.status.isInProgress
             ? const CircularProgressIndicator()
             : ElevatedButton(
+                style: ButtonStyle(
+                  fixedSize:
+                      MaterialStateProperty.all<Size?>(const Size(200.0, 50.0)),
+                ),
                 key: const Key('loginForm_continue_raisedButton'),
                 onPressed: state.isValid
                     ? () {
@@ -102,6 +101,34 @@ class _LoginButton extends StatelessWidget {
                     : null,
                 child: const Text('Login'),
               );
+      },
+    );
+  }
+}
+
+class _CreateAccount extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<LoginBloc, LoginState>(
+      builder: (context, state) {
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Text(
+              "Don't have account?",
+              style: TextStyle(fontSize: 12),
+            ),
+            TextButton(
+              style: TextButton.styleFrom(
+                textStyle: const TextStyle(
+                  fontSize: 12,
+                ),
+              ),
+              onPressed: () => SignUpPage.open(context),
+              child: const Text('Create now'),
+            ),
+          ],
+        );
       },
     );
   }

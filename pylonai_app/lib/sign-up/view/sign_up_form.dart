@@ -48,16 +48,15 @@ class _UsernameInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<SignUpBloc, SignUpState>(
-      buildWhen: (previous, current) => previous.username != current.username,
+      buildWhen: (previous, current) => previous.name != current.name,
       builder: (context, state) {
         return TextField(
-          key: const Key('signUpForm_usernameInput_textField'),
-          onChanged: (username) =>
-              context.read<SignUpBloc>().add(SignUpUsernameChanged(username)),
+          key: const Key('signUpForm_nameInput_textField'),
+          onChanged: (name) =>
+              context.read<SignUpBloc>().add(SignUpNameChanged(name)),
           decoration: InputDecoration(
-            labelText: 'username',
-            errorText:
-                state.username.displayError != null ? 'invalid username' : null,
+            labelText: 'name',
+            errorText: state.name.displayError != null ? 'invalid name' : null,
           ),
         );
       },
@@ -116,6 +115,10 @@ class _SignUpButton extends StatelessWidget {
         return state.status.isInProgress
             ? const CircularProgressIndicator()
             : ElevatedButton(
+                style: ButtonStyle(
+                  fixedSize:
+                      MaterialStateProperty.all<Size?>(const Size(200.0, 50.0)),
+                ),
                 key: const Key('signUpForm_continue_raisedButton'),
                 onPressed: state.isValid
                     ? () {

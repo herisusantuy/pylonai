@@ -12,7 +12,7 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
     required AuthenticationRepository authenticationRepository,
   })  : _authenticationRepository = authenticationRepository,
         super(const SignUpState()) {
-    on<SignUpUsernameChanged>(_onUsernameChanged);
+    on<SignUpNameChanged>(_onNameChanged);
     on<SignUpEmailChanged>(_onEmailChanged);
     on<SignUpPasswordChanged>(_onPasswordChanged);
     on<SignUpSubmitted>(_onSubmitted);
@@ -20,15 +20,15 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
 
   final AuthenticationRepository _authenticationRepository;
 
-  void _onUsernameChanged(
-    SignUpUsernameChanged event,
+  void _onNameChanged(
+    SignUpNameChanged event,
     Emitter<SignUpState> emit,
   ) {
-    final username = Username.dirty(event.username);
+    final name = Name.dirty(event.name);
     emit(
       state.copyWith(
-        username: username,
-        isValid: Formz.validate([state.password, state.email, username]),
+        name: name,
+        isValid: Formz.validate([state.password, state.email, name]),
       ),
     );
   }
@@ -41,7 +41,7 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
     emit(
       state.copyWith(
         email: email,
-        isValid: Formz.validate([email, state.username, state.password]),
+        isValid: Formz.validate([email, state.name, state.password]),
       ),
     );
   }
@@ -54,7 +54,7 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
     emit(
       state.copyWith(
         password: password,
-        isValid: Formz.validate([password, state.username, state.email]),
+        isValid: Formz.validate([password, state.name, state.email]),
       ),
     );
   }
@@ -67,7 +67,7 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
       emit(state.copyWith(status: FormzSubmissionStatus.inProgress));
       try {
         var response = await _authenticationRepository.signUp(
-          username: state.username.value,
+          name: state.name.value,
           email: state.email.value,
           password: state.password.value,
         );
