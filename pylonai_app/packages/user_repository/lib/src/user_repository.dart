@@ -1,6 +1,8 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:user_repository/src/domain/update_user_request.dart';
 
 import 'package:user_repository/src/models/models.dart';
 
@@ -22,5 +24,11 @@ class UserRepository {
     var response = await dio.get('https://api.escuelajs.co/api/v1/users');
     final users = response.data as List;
     return users.map((e) => UserResponse.fromJson(e)).toList();
+  }
+
+  Future<Response> updateUser(int id, Map<String, dynamic> user) async {
+    var response = await dio.put('https://api.escuelajs.co/api/v1/users/$id',
+        data: jsonEncode(user));
+    return response;
   }
 }

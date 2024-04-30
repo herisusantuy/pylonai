@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pylonai_app/authentication/bloc/authentication_bloc.dart';
+import 'package:pylonai_app/home/view/home_body.dart';
+import 'package:user_repository/user_repository.dart';
+
+import '../home.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -13,44 +17,21 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        body: Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            children: <Widget>[
-              const Text('List of Employee'),
-              Builder(
-                builder: (context) {
-                  final users = context.select(
-                    (AuthenticationBloc bloc) => bloc.state.users,
-                  );
-                  return users!.isNotEmpty
-                      ? Expanded(
-                          child: ListView.separated(
-                            itemCount: users.length,
-                            separatorBuilder:
-                                (BuildContext context, int index) =>
-                                    const Divider(),
-                            itemBuilder: (context, index) {
-                              final user = users[index];
-                              return ListTile(
-                                title: Text('${index + 1}. ${user.name}'),
-                              );
-                            },
-                          ),
-                        )
-                      : const Text("No Users");
-                },
-              ),
-              ElevatedButton(
-                child: const Text('Download CSV'),
-                onPressed: () {
-                  context
-                      .read<AuthenticationBloc>()
-                      .add(AuthenticationLogoutRequested());
-                },
-              ),
-            ],
+        appBar: AppBar(
+          backgroundColor: Colors.black,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () => Navigator.of(context).pop(false),
           ),
+          title: const Text(
+            'List of Employee',
+            style: TextStyle(color: Colors.white, fontSize: 24),
+          ),
+        ),
+        body: BlocProvider(
+          create: (context) => HomeBloc(
+              userRepository: RepositoryProvider.of<UserRepository>(context)),
+          child: const HomeBody(),
         ),
       ),
     );

@@ -14,13 +14,19 @@ class SignUpForm extends StatelessWidget {
           ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
             ..showSnackBar(
-              const SnackBar(content: Text('Authentication Failure')),
+              const SnackBar(
+                content: Text('Authentication Failure'),
+                backgroundColor: Colors.red,
+              ),
             );
         } else if (state.status.isSuccess) {
           ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
             ..showSnackBar(
-              const SnackBar(content: Text('Authentication Success')),
+              const SnackBar(
+                content: Text('Authentication Success'),
+                backgroundColor: Colors.green,
+              ),
             );
           Navigator.pop(context);
         }

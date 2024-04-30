@@ -34,11 +34,10 @@ class AuthenticationRepository {
       ),
     );
     if (response.statusCode == 201) {
+      _controller.add(AuthenticationStatus.authenticated);
       var data = LoginResponse.fromJson(response.data);
       await prefs.setString('accessToken', data.accessToken);
       await prefs.setString('refreshToken', data.refreshToken);
-
-      _controller.add(AuthenticationStatus.authenticated);
     } else {
       _controller.add(AuthenticationStatus.unauthenticated);
     }
