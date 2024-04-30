@@ -1,5 +1,5 @@
 # Pylon AI App
-![Preview](https://github.com/herisusantuy/contact-app/blob/master/assets/Simulator%20Screen%20Recording%20-%20iPhone%2015%20Pro%20-%202024-04-05%20at%2012.48.41.gif)
+![Preview](https://github.com/herisusantuy/pylonai/blob/master/pylon.app.gif)
 
 ## Description
 
